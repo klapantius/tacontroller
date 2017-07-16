@@ -17,7 +17,7 @@
     $(function () {
       var socket = io();
       socket.on('status change', function(msg){
-        $('#messages').append($('<li>').text(msg));
+        $('#messages').append($('<li>').text(msg.agent + ": " + msg.change));
       });
       socket.emit('new client');
     });

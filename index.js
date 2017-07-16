@@ -1,25 +1,34 @@
 //----------------------------------------------------------------------
+//--- configuration
+//----------------------------------------------------------------------
+var TAs = [
+    { name: "agent1", filename: "/bj/temp/agent1.txt" },
+    { name: "agent2", filename: "/bj/temp/agent2.txt" },
+];
+
+//----------------------------------------------------------------------
 //--- tailing
 //----------------------------------------------------------------------
 var Tail = require('always-tail2');
 var fs = require('fs');
-var filename = "/bj/temp/tail.txt";
 
-if (!fs.existsSync(filename)) fs.writeFileSync(filename, "");
+TAs.forEach(function (ta) {
+    if (!fs.existsSync(ta.filename)) fs.writeFileSync(ta.filename, "");
 
-var tail = new Tail(filename, '\n');
+    ta.tail = new Tail(ta.filename, '\n');
 
-tail.on('line', function (data) {
-    console.log("got line:", data);
-    broadcast(data);
-    data = '';
-});
+    ta.tail.on('line', function (data) {
+        console.log("got line:", data);
+        broadcast(ta, data);
+        data = '';
+    });
 
-tail.on('error', function (data) {
-    console.log("error:", data);
-});
+    ta.tail.on('error', function (data) {
+        console.log("error:", data);
+    });
 
-tail.watch();
+    ta.tail.watch();
+}, this);
 //----------------------------------------------------------------------
 
 
@@ -47,11 +56,11 @@ io.on('connection', function (socket) {
     });
 });
 
-function broadcast(data) {
-    io.emit('status change', data)
+function broadcast(ta, data) {
+    io.emit('status change', {agent: ta.name, change: data});
 }
 
 http.listen(3000, function () {
-    console.info("you can open now http://localhost:3000/")
+    console.info("you can open now http://localhost:3000/");
 });
 //----------------------------------------------------------------------
