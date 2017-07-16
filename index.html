@@ -45,11 +45,9 @@
         socket.on('status change', function (msg) {
             var item = $('#messages').find('#' + msg.agent);
             if (item.length == 1) {
-                console.info("item found: " + item[0].id + " - " + item[0].text);
                 item[0].textContent = msg.agent + ": " + msg.change;
             }
             else {
-                console.info("new item: " + msg.agent);
                 $('#messages').append($('<li id="' + msg.agent + '">').text(msg.agent + ": " + msg.change));
             }
         });
@@ -60,9 +58,6 @@
 
 <body>
     <ul id="messages"></ul>
-    <form action="">
-        <input id="m" autocomplete="off" /><button>nosza</button>
-    </form>
 </body>
 
 </html>
