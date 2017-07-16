@@ -43,10 +43,7 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   socket.on('new client', function() {
     console.log('a new client connected: ' + socket.id);
-    //io.to(socket.id).emit('identification', ++idcount);
-  });
-  socket.on('disconnect', function(){
-    console.log('user ' + socket.id + ' disconnected');
+    //todo: send all TA records to the new client
   });
 });
 
@@ -55,8 +52,6 @@ function broadcast(data){
 }
 
 http.listen(3000, function(){
-  console.log('listening on *:3000');
+  console.info("you can open now http://localhost:3000/")
 });
 //----------------------------------------------------------------------
-
-console.info("you can open now http://localhost:3000/")
